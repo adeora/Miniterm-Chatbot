@@ -153,6 +153,7 @@ public class Markov {
     public static void main(String args[])
     {
         Markov m = new Markov();
-        m.generateSentence("A");
+        m.generate(new File("prince.txt"));
+        m.generateSentence();
     }
 }
