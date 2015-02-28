@@ -100,6 +100,6 @@ public class ElizaImp3 {
     public static String response( String input ) {
         //use the Markov model to process the input to provide the best response
         String response = "";
-        return response;
+        return response; 
     }
 }
