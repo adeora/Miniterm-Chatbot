@@ -1,14 +1,17 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Random;
+import java.util.Arrays;
+
 
 /**
  * Created by goldage5 on 2/27/15.
  */
 public class Markov2 {
-    public static Hashtable<String, ArrayList> forwardMarkov = new Hashtable();
-    public static Hashtable<String, ArrayList> backwardMarkov = new Hashtable();
+    public Hashtable<String, ArrayList> forwardMarkov = new Hashtable();
+    public Hashtable<String, ArrayList> backwardMarkov = new Hashtable();
     public Random rnd = new Random();
 
     public Hashtable trainForward( File file )
@@ -215,22 +218,27 @@ public class Markov2 {
             ArrayList<ArrayList<String>> wordsList = backwardMarkov.get(keyword);
             if ( wordsList == null )
             {
-                System.out.println("ERROR! WORD NOT FOUND!");
+                System.out.println("ERROR! WORD NOT FOUND:");
+                System.out.println(keyword);
+                System.out.println(wordsList);
                 break;
             }
             ArrayList<String> firstLastWords = wordsList.get( 0 );
             ArrayList<String> secondLastWords = wordsList.get( 1 );
             ArrayList<String> thirdLastWords = wordsList.get( 2 );
-            firstLastWord = firstLastWords.get( new Random().nextInt(firstLastWords.size()) );
+            int location = rnd.nextInt(firstLastWords.size());
+            firstLastWord = firstLastWords.get(location);
             if (firstLastWord.charAt(firstLastWord.length() - 1) == '.') {
                 break;
             }
-            secondLastWord = secondLastWords.get( new Random().nextInt(secondLastWords.size()) );
+            secondLastWord = secondLastWords.get(location);
             if (secondLastWord.charAt(secondLastWord.length() - 1) == '.') {
+                output = firstLastWord + " "  + output;
                 break;
             }
-            thirdLastWord = thirdLastWords.get( new Random().nextInt(thirdLastWords.size()));
+            thirdLastWord = thirdLastWords.get(location);
             if (thirdLastWord.charAt(thirdLastWord.length() - 1) == '.') {
+                output = firstLastWord + " " + secondLastWord + " " + output;
                 break;
             }
             output = thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
@@ -255,7 +263,7 @@ public class Markov2 {
         while (keyword.charAt(keyword.length() - 1) != '.')
         {
             firstWord = secondWord = thirdWord = "";
-            ArrayList<ArrayList<String>> wordsList = backwardMarkov.get(keyword);
+            ArrayList<ArrayList<String>> wordsList = forwardMarkov.get(keyword);
             if ( wordsList == null )
             {
                 System.out.println("ERROR! WORD NOT FOUND!");
@@ -264,18 +272,19 @@ public class Markov2 {
             ArrayList<String> firstWords = wordsList.get( 0 );
             ArrayList<String> secondWords = wordsList.get( 1 );
             ArrayList<String> thirdWords = wordsList.get( 2 );
-            firstWord = firstWords.get( new Random().nextInt(firstWords.size()) );
+            int location = rnd.nextInt(firstWords.size());
+            firstWord = firstWords.get(location);
             if (firstWord.charAt(firstWord.length() - 1) == '.')
             {
                 output += firstWord + " ";
                 break;
             }
-            secondWord = secondWords.get( new Random().nextInt(secondWords.size()));
+            secondWord = secondWords.get(location);
             if (secondWord.charAt(secondWord.length() - 1) == '.') {
                 output += secondWord + " ";
                 break;
             }
-            thirdWord = thirdWords.get( new Random().nextInt(thirdWords.size()));
+            thirdWord = thirdWords.get(location);
             if (thirdWord.charAt(thirdWord.length() - 1) == '.') {
                 output += thirdWord + " ";
                 break;
@@ -286,16 +295,22 @@ public class Markov2 {
         return output;
     }
 
-    /*public static void main(String args[])
+    public static void main(String args[])
     {
         Markov2 m = new Markov2();
-        File trainingData = new File("prince.txt");
-        m.trainForward(trainingData);
-		System.out.println("GENERATING FORWARDS");
-        System.out.println(m.generateForward("the"));
-		
-		m.trainBackward(trainingData);
-		System.out.println("GENERATING BACKWARDS");
-		System.out.println(m.generateBackward("him"));
-    }*/
+        File trainingData = new File("hemingway-sun-also-rises.txt");
+        Hashtable data = m.trainForward(trainingData);
+        m.trainBackward(trainingData);
+		System.out.println(m.generateBackward("my"));
+        System.out.println(m.generateForward("my"));
+    }
+
+    /*
+     * Method to remove an element from an Array of Strings.
+     */
+    private String[] remove(String[] array, int index) {
+        List<String> list = new ArrayList<String>(Arrays.asList(array));
+        list.remove(index);
+        return (String[]) list.toArray(array);
+    }
 }
