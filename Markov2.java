@@ -1,9 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
-import java.util.Arrays;
+import java.util.*;
 
 
 /**
@@ -14,7 +10,7 @@ public class Markov2 {
     public Hashtable<String, ArrayList> backwardMarkov = new Hashtable();
     public Random rnd = new Random();
 
-    public Hashtable trainForward( File file )
+    private Hashtable trainForward( File file )
     {
         ArrayList<ArrayList<String>> startArrayList = new ArrayList<ArrayList<String>>();
         startArrayList.add(new ArrayList<String>());
@@ -100,14 +96,11 @@ public class Markov2 {
                 }
             }
         }
-        catch(Exception ex) {
-            System.out.println("");
-            ex.printStackTrace();
-        }
+        catch(Exception ignored) {}
         return forwardMarkov;
     }
 
-    public Hashtable trainBackward( File file )
+    private Hashtable trainBackward( File file )
     {
         ArrayList<ArrayList<String>> endArrayList = new ArrayList<ArrayList<String>>();
         endArrayList.add(new ArrayList<String>());
@@ -192,22 +185,12 @@ public class Markov2 {
                 }
             }
         }
-        catch(Exception ex) {
-            System.out.println("");
-            ex.printStackTrace();
-        }
+        catch(Exception ignored) {}
         return backwardMarkov;
     }
 
-    public String generateBackward(String keyword)
+    private String generateBackward(String keyword) throws WordNotFoundException
     {
-        /*  1) start with keyword
-        *   2) choose random first preceding word
-         *  3) choose random second preceding word
-         *  4) choose random third preceding word
-         *  5) repeat using third preceding word as keyword
-         *  6) Stop when last character of any word has a period
-        */
         String firstLastWord;
         String secondLastWord;
         String thirdLastWord;
@@ -218,10 +201,8 @@ public class Markov2 {
             ArrayList<ArrayList<String>> wordsList = backwardMarkov.get(keyword);
             if ( wordsList == null )
             {
-                System.out.println("ERROR! WORD NOT FOUND:");
-                System.out.println(keyword);
-                System.out.println(wordsList);
-                break;
+                WordNotFoundException exception = new WordNotFoundException("Word not found.");
+                throw exception;
             }
             ArrayList<String> firstLastWords = wordsList.get( 0 );
             ArrayList<String> secondLastWords = wordsList.get( 1 );
@@ -244,18 +225,28 @@ public class Markov2 {
             output = thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
             keyword = thirdLastWord;
         }
+
+        //fix the issue with first and second words being switched sometimes
+        ArrayList<String> outputWords = new ArrayList<String>(Arrays.asList(output.split(" ")));
+        if (outputWords.size() > 1)
+        {
+            String first = Character.toString(outputWords.get(0).charAt(0));
+            String second = Character.toString(outputWords.get(1).charAt(0));
+            if (first.equals(first.toLowerCase()) && second.equals(second.toUpperCase()))
+            {
+                Collections.swap(outputWords, 0, 1);
+            }
+        }
+        output = "";
+        for (String outputWord : outputWords) {
+            output += outputWord + " ";
+        }
+
         return output;
     }
 
-    public String generateForward(String keyword)
+    private String generateForward(String keyword) throws WordNotFoundException
     {
-        /*  1) start with keyword
-         *  2) choose random first following word
-         *  3) choose random second following word
-         *  4) choose random third following word
-         *  5) repeat using third following word as keyword
-         *  6) Stop when last character of any word has a period
-		 */
 		String firstWord;
         String secondWord;
         String thirdWord;
@@ -266,8 +257,8 @@ public class Markov2 {
             ArrayList<ArrayList<String>> wordsList = forwardMarkov.get(keyword);
             if ( wordsList == null )
             {
-                System.out.println("ERROR! WORD NOT FOUND!");
-                break;
+                WordNotFoundException exception = new WordNotFoundException("Word not found.");
+                throw exception;
             }
             ArrayList<String> firstWords = wordsList.get( 0 );
             ArrayList<String> secondWords = wordsList.get( 1 );
@@ -295,22 +286,56 @@ public class Markov2 {
         return output;
     }
 
-    public static void main(String args[])
+    /*
+     * Method to generate a sentence based off of a given keyword
+     * Returns the sentence as a String if the generation was successful
+     * Returns `void` if the keyword was not found
+     */
+    public String generateSentence(String keyword)
     {
-        Markov2 m = new Markov2();
-        File trainingData = new File("hemingway-sun-also-rises.txt");
-        Hashtable data = m.trainForward(trainingData);
-        m.trainBackward(trainingData);
-		System.out.println(m.generateBackward("my"));
-        System.out.println(m.generateForward("my"));
+        try {
+            String first = generateBackward(keyword).trim();
+            String second = generateForward(keyword).trim();
+            return first + " " + second;
+        }
+        catch(WordNotFoundException ex)
+        {
+            return null;
+        }
     }
 
     /*
-     * Method to remove an element from an Array of Strings.
+     * Method to train the Markov
+     * Takes a file with the training data
      */
-    private String[] remove(String[] array, int index) {
-        List<String> list = new ArrayList<String>(Arrays.asList(array));
-        list.remove(index);
-        return (String[]) list.toArray(array);
+    public void train(File file)
+    {
+        trainForward(file);
+        trainBackward(file);
+    }
+
+    /*
+     * Method to train the Markov
+     * Takes a filename with the training data
+     */
+    public void train(String filename)
+    {
+        trainForward(new File(filename));
+        trainBackward(new File(filename));
+    }
+
+    /*
+     * Custom Exception to handle a word not being found when generating a sentence
+     */
+    class WordNotFoundException extends Exception {
+        public WordNotFoundException(String message)
+        {
+            super(message);
+        }
+
+        public WordNotFoundException(String message, Throwable throwable)
+        {
+            super(message, throwable);
+        }
     }
 }
