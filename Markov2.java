@@ -9,7 +9,7 @@ import java.util.Random;
 public class Markov2 {
     public static Hashtable<String, ArrayList> forwardMarkov = new Hashtable();
     public static Hashtable<String, ArrayList> backwardMarkov = new Hashtable();
-    Random rnd = new Random();
+    public Random rnd = new Random();
 
     public Hashtable trainForward( File file )
     {
@@ -43,7 +43,7 @@ public class Markov2 {
                             startWords.get( 1 ).add(wordList[i + 1]);
                             if ( wordList.length > 2 ) {
                                 // add the third word to the list of start words
-                                startWords.get( 2 ).add( wordList[i+2] );
+                                startWords.get( 2 ).add( wordList[i + 2] );
                             }
                         }
                     }
@@ -60,15 +60,15 @@ public class Markov2 {
 
                         //get the current and three following words
                         String currentWord = wordList[i];
-                        String firstNextWord = wordList[i+1];
+                        String firstNextWord = wordList[i + 1];
                         String secondNextWord = "";
                         String thirdNextWord = "";
                         if (i < wordList.length - 2)
                         {
-                            secondNextWord = wordList[i+2];
-                            if (i < wordList.length -3)
+                            secondNextWord = wordList[i + 2];
+                            if (i < wordList.length - 3)
                             {
-                            thirdNextWord = wordList[i+3];
+                            thirdNextWord = wordList[i + 3];
                             }
                         }
 
@@ -196,23 +196,66 @@ public class Markov2 {
         return backwardMarkov;
     }
 
+    public String generateBackward(String keyword)
+    {
+        /*  1) start with keyword
+        *   2) choose random first preceding word
+         *  3) choose random second preceding word
+         *  4) choose random third preceding word
+         *  5) repeat using third preceding word as keyword
+         *  6) Stop when last character of any word has a period
+        */
+        String firstLastWord;
+        String secondLastWord;
+        String thirdLastWord;
+        String output = " ";
+        while (keyword.charAt(keyword.length() - 1) != '.')
+        {
+            firstLastWord = secondLastWord = thirdLastWord = "";
+            ArrayList<ArrayList<String>> wordsList = backwardMarkov.get(keyword);
+            if ( wordsList == null )
+            {
+                System.out.println("ERROR! WORD NOT FOUND!");
+                break;
+            }
+            ArrayList<String> firstLastWords = wordsList.get( 0 );
+            ArrayList<String> secondLastWords = wordsList.get( 1 );
+            ArrayList<String> thirdLastWords = wordsList.get( 2 );
+            firstLastWord = firstLastWords.get( new Random().nextInt(firstLastWords.size()) );
+            if (firstLastWord.charAt(firstLastWord.length() - 1) == '.') {
+                break;
+            }
+            secondLastWord = secondLastWords.get( new Random().nextInt(secondLastWords.size()) );
+            if (secondLastWord.charAt(secondLastWord.length() - 1) == '.') {
+                break;
+            }
+            thirdLastWord = thirdLastWords.get( new Random().nextInt(thirdLastWords.size()));
+            if (thirdLastWord.charAt(thirdLastWord.length() - 1) == '.') {
+                break;
+            }
+            output = thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
+            keyword = thirdLastWord;
+        }
+        return output;
+    }
+
     public String generateForward(String keyword)
     {
         /*  1) start with keyword
-        *   2) choose random first following word
+         *  2) choose random first following word
          *  3) choose random second following word
          *  4) choose random third following word
          *  5) repeat using third following word as keyword
          *  6) Stop when last character of any word has a period
-        */
-        String firstWord;
+		 */
+		String firstWord;
         String secondWord;
         String thirdWord;
         String output = keyword + " ";
         while (keyword.charAt(keyword.length() - 1) != '.')
         {
             firstWord = secondWord = thirdWord = "";
-            ArrayList<ArrayList<String>> wordsList = forwardMarkov.get(keyword);
+            ArrayList<ArrayList<String>> wordsList = backwardMarkov.get(keyword);
             if ( wordsList == null )
             {
                 System.out.println("ERROR! WORD NOT FOUND!");
@@ -227,7 +270,7 @@ public class Markov2 {
                 output += firstWord + " ";
                 break;
             }
-            secondWord = secondWords.get( new Random().nextInt(secondWords.size()) );
+            secondWord = secondWords.get( new Random().nextInt(secondWords.size()));
             if (secondWord.charAt(secondWord.length() - 1) == '.') {
                 output += secondWord + " ";
                 break;
@@ -243,29 +286,16 @@ public class Markov2 {
         return output;
     }
 
-    public String generateBackward(String keyword)
-    {
-        
-    }
-
-    public static void main(String args[])
+    /*public static void main(String args[])
     {
         Markov2 m = new Markov2();
         File trainingData = new File("prince.txt");
-        /*Hashtable backward = m.trainBackward(trainingData);
-        File file = new File("output.txt");
-        try {
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(backward.toString());
-            bw.close();
-            System.out.println("File written");
-        }
-        catch(IOException ex){System.out.println("IOException");}*/
         m.trainForward(trainingData);
+		System.out.println("GENERATING FORWARDS");
         System.out.println(m.generateForward("the"));
-    }
-
-
-
+		
+		m.trainBackward(trainingData);
+		System.out.println("GENERATING BACKWARDS");
+		System.out.println(m.generateBackward("him"));
+    }*/
 }
