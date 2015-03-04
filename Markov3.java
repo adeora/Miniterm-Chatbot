@@ -4,10 +4,10 @@ import java.util.*;
 
 /**
  * Created by goldage5 on 2/27/15.
- * 2nd Iteration of the Markov Model Generator
- * 3rd order, has support for any punctuation at the end
+ * 3rd Iteration of the Markov Model Generator
+ * Upping to 5th order (or attempting)
  */
-public class Markov2 {
+public class Markov3 {
     public Hashtable<String, ArrayList> forwardMarkov = new Hashtable();
     public Hashtable<String, ArrayList> backwardMarkov = new Hashtable();
     public Random rnd = new Random();
@@ -27,8 +27,16 @@ public class Markov2 {
         {
             BufferedReader br = new BufferedReader( new FileReader( file ) );
             while ( ( thisLine = br.readLine() ) != null ) {
-                String[] wordList = thisLine.split( " " );
-                for ( int i = 0; i < wordList.length; i++ ) {
+                String[] originalWordList = thisLine.split( " " );
+                ArrayList<String> words = new ArrayList<String>();
+                //delete any empty strings in the array
+                for( int i = 0; i < originalWordList.length; i++ ) {
+                    if( !originalWordList[i].equals("") ) {
+                        words.add( originalWordList[i] );
+                    }
+                }
+
+                for ( int i = 0; i < words.size(); i++ ) {
                     //if first word
                     if ( i == 0 )
                     {
@@ -37,39 +45,49 @@ public class Markov2 {
 
                         //add the first start word
                         ArrayList<String> firstStartWords = startWords.get( 0 );
-                        firstStartWords.add( wordList[i] );
+                        firstStartWords.add( words.get(i) );
 
-                        if ( wordList.length > 1 ) {
+                        if ( words.size() > 1 ) {
                             // add the next word to the list of start words
-                            startWords.get( 1 ).add(wordList[i + 1]);
-                            if ( wordList.length > 2 ) {
+                            startWords.get( 1 ).add(words.get(i + 1));
+                            if ( words.size() > 2 ) {
                                 // add the third word to the list of start words
-                                startWords.get( 2 ).add( wordList[i + 2] );
+                                startWords.get( 2 ).add( words.get(i + 2) );
                             }
                         }
                     }
                     // if last word
-                    else if ( i == wordList.length - 1 )
+                    else if ( i ==words.size() - 1 )
                     {
                         ArrayList<String> endWords = forwardMarkov.get( "_end" );
-                        endWords.add( wordList[i] );
+                        endWords.add( words.get(i) );
                     }
                     //if any word in the middle
                     else
                     {
-                        ArrayList<ArrayList<String>> followingWords = forwardMarkov.get( wordList[i] );
+                        ArrayList<ArrayList<String>> followingWords = forwardMarkov.get( words.get(i) );
 
                         //get the current and three following words
-                        String currentWord = wordList[i];
-                        String firstNextWord = wordList[i + 1];
+                        String currentWord = words.get(i);
+                        String firstNextWord = words.get(i+1);
                         String secondNextWord = "";
                         String thirdNextWord = "";
-                        if (i < wordList.length - 2)
+                        String fourthNextWord = "";
+                        String fifthNextWord = "";
+                        if (i < words.size() - 2)
                         {
-                            secondNextWord = wordList[i + 2];
-                            if (i < wordList.length - 3)
+                            secondNextWord = words.get(i + 2);
+                            if (i < words.size() - 3)
                             {
-                            thirdNextWord = wordList[i + 3];
+                                thirdNextWord = words.get(i+3);
+                                if (i < words.size() - 4)
+                                {
+                                    fourthNextWord = words.get(i+4);
+                                    if (i < words.size() - 5)
+                                    {
+                                        fifthNextWord = words.get(i+5);
+                                    }
+                                }
                             }
                         }
 
@@ -79,13 +97,19 @@ public class Markov2 {
                             ArrayList<String> firstWords = new ArrayList<String>();
                             ArrayList<String> secondWords = new ArrayList<String>();
                             ArrayList<String> thirdWords = new ArrayList<String>();
+                            ArrayList<String> fourthWords = new ArrayList<String>();
+                            ArrayList<String> fifthWords = new ArrayList<String>();
                             firstWords.add(firstNextWord);
                             secondWords.add(secondNextWord);
                             thirdWords.add(thirdNextWord);
+                            fourthWords.add(fourthNextWord);
+                            fifthWords.add(fifthNextWord);
                             ArrayList<ArrayList<String>> wordsToAdd = new ArrayList<ArrayList<String>>();
                             wordsToAdd.add(firstWords);
                             wordsToAdd.add(secondWords);
                             wordsToAdd.add(thirdWords);
+                            wordsToAdd.add(fourthWords);
+                            wordsToAdd.add(fifthWords);
                             forwardMarkov.put(currentWord, wordsToAdd);
                         }
                         else
@@ -93,6 +117,8 @@ public class Markov2 {
                             followingWords.get( 0 ).add(firstNextWord);
                             followingWords.get ( 1 ).add(secondNextWord);
                             followingWords.get( 2 ).add(thirdNextWord);
+                            followingWords.get ( 3 ).add(fourthNextWord);
+                            followingWords.get( 4 ).add(fifthNextWord);
                         }
                     }
                 }
@@ -117,48 +143,67 @@ public class Markov2 {
         {
             BufferedReader br = new BufferedReader( new FileReader( file ) );
             while ( ( thisLine = br.readLine() ) != null ) {
-                String[] wordList = thisLine.split( " " );
-                for ( int i = 0; i < wordList.length; i++ ) {
+                String[] originalWordList = thisLine.split( " " );
+
+                ArrayList<String> words = new ArrayList<String>();
+                //delete any empty strings in the array
+                for( int i = 0; i < originalWordList.length; i++ ) {
+                    if( !originalWordList[i].equals("") ) {
+                        words.add( originalWordList[i] );
+                    }
+                }
+
+                for ( int i = 0; i < words.size(); i++ ) {
                     //if starting words, no words before it
                     if ( i == 0 )
                     {
                         ArrayList<String> startWords = backwardMarkov.get( "_start" );
-                        startWords.add( wordList[i] );
+                        startWords.add( words.get(i) );
                     }
                     // if last word, add words before it
-                    else if ( i == wordList.length - 1 )
+                    else if ( i == words.size() - 1 )
                     {
                         // get the arraylist of end words
                         ArrayList<ArrayList<String>> endWords = backwardMarkov.get( "_end" );
 
                         //add the first end word
-                        endWords.get( 0 ).add( wordList[i] );
+                        endWords.get( 0 ).add( words.get(i) );
 
-                        if ( wordList.length > 1 ) {
+                        if ( words.size() > 1 ) {
                             // add the next word to the list of start words
-                            endWords.get( 1 ).add( wordList[i - 1] );
-                            if ( wordList.length > 2 ) {
+                            endWords.get( 1 ).add( words.get(i-2) );
+                            if ( words.size() > 2 ) {
                                 // add the third word to the list of start words
-                                endWords.get( 2 ).add( wordList[i - 2] );
+                                endWords.get( 2 ).add( words.get(i-3) );
                             }
                         }
                     }
                     //if any word in the middle
                     else
                     {
-                        ArrayList<ArrayList<String>> followingWords = backwardMarkov.get( wordList[i] );
+                        ArrayList<ArrayList<String>> followingWords = backwardMarkov.get( words.get(i) );
 
                         //get the current and three following words
-                        String currentWord = wordList[i];
-                        String firstPreviousWord = wordList[i - 1];
+                        String currentWord = words.get(i);
+                        String firstPreviousWord = words.get(i - 1);
                         String secondPreviousWord = "";
                         String thirdPreviousWord = "";
+                        String fourthPreviousWord = "";
+                        String fifthPreviousWord = "";
                         if (i > 1)
                         {
-                            secondPreviousWord = wordList[i - 2];
+                            secondPreviousWord = words.get(i-2);
                             if (i > 2)
                             {
-                                thirdPreviousWord = wordList[i - 3];
+                                thirdPreviousWord = words.get(i-3);
+                                if (i > 3)
+                                {
+                                    fourthPreviousWord = words.get(i-4);
+                                    if (i > 4)
+                                    {
+                                        fifthPreviousWord = words.get(i-5);
+                                    }
+                                }
                             }
                         }
 
@@ -168,13 +213,19 @@ public class Markov2 {
                             ArrayList<String> firstWords = new ArrayList<String>();
                             ArrayList<String> secondWords = new ArrayList<String>();
                             ArrayList<String> thirdWords = new ArrayList<String>();
+                            ArrayList<String> fourthWords = new ArrayList<String>();
+                            ArrayList<String> fifthWords = new ArrayList<String>();
                             firstWords.add(firstPreviousWord);
                             secondWords.add(secondPreviousWord);
                             thirdWords.add(thirdPreviousWord);
+                            fourthWords.add(fourthPreviousWord);
+                            fifthWords.add(fifthPreviousWord);
                             ArrayList<ArrayList<String>> wordsToAdd = new ArrayList<ArrayList<String>>();
                             wordsToAdd.add(firstWords);
                             wordsToAdd.add(secondWords);
                             wordsToAdd.add(thirdWords);
+                            wordsToAdd.add(fourthWords);
+                            wordsToAdd.add(fifthWords);
                             backwardMarkov.put(currentWord, wordsToAdd);
                         }
                         else
@@ -182,6 +233,8 @@ public class Markov2 {
                             followingWords.get( 0 ).add(firstPreviousWord);
                             followingWords.get ( 1 ).add(secondPreviousWord);
                             followingWords.get( 2 ).add(thirdPreviousWord);
+                            followingWords.get( 3 ).add(fourthPreviousWord);
+                            followingWords.get( 4 ).add(fifthPreviousWord);
                         }
                     }
                 }
@@ -196,11 +249,13 @@ public class Markov2 {
         String firstLastWord;
         String secondLastWord;
         String thirdLastWord;
+        String fourthLastWord;
+        String fifthLastWord;
         String output = " ";
         while ((keyword.charAt(keyword.length() - 1) != '.') || (keyword.charAt(keyword.length() - 1) != '?')
                 || (keyword.charAt(keyword.length() - 1) != '!'))
         {
-            firstLastWord = secondLastWord = thirdLastWord = "";
+            firstLastWord = secondLastWord = thirdLastWord = fourthLastWord = fifthLastWord = "";
             ArrayList<ArrayList<String>> wordsList = backwardMarkov.get(keyword);
             if ( wordsList == null )
             {
@@ -210,70 +265,89 @@ public class Markov2 {
             ArrayList<String> firstLastWords = wordsList.get( 0 );
             ArrayList<String> secondLastWords = wordsList.get( 1 );
             ArrayList<String> thirdLastWords = wordsList.get( 2 );
+            ArrayList<String> fourthLastWords = wordsList.get( 3 );
+            ArrayList<String> fifthLastWords = wordsList.get( 4 );
             int location = rnd.nextInt(firstLastWords.size());
-            firstLastWord = firstLastWords.get(location);
-            if ((firstLastWord.charAt(firstLastWord.length() - 1) == '.') ||
-                    (firstLastWord.charAt(firstLastWord.length() - 1) == '?') ||
-                    (firstLastWord.charAt(firstLastWord.length() - 1) == '!')) {
-                break;
-            }
-            secondLastWord = secondLastWords.get(location);
-            if ((secondLastWord.charAt(secondLastWord.length() - 1) == '.') ||
-                    (secondLastWord.charAt(secondLastWord.length() - 1) == '?') ||
-                    (secondLastWord.charAt(secondLastWord.length() - 1) == '!')) {
-                output = firstLastWord + " "  + output;
-                break;
-            }
-            thirdLastWord = thirdLastWords.get(location);
-            if ((thirdLastWord.charAt(thirdLastWord.length() - 1) == '.') ||
-                    (thirdLastWord.charAt(thirdLastWord.length() - 1) == '?') ||
-                    (thirdLastWord.charAt(thirdLastWord.length() - 1) == '!')) {
-                output = secondLastWord + " " + firstLastWord + " " + output;
-                break;
-            }
-            output = thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
-            keyword = thirdLastWord;
-        }
 
-        //fix the issue with first and second words being switched sometimes
-        /*
-        ArrayList<String> outputWords = new ArrayList<String>(Arrays.asList(output.split(" ")));
-        if (outputWords.size() > 1)
-        {
-            String first = Character.toString(outputWords.get(0).charAt(0));
-            String second = Character.toString(outputWords.get(1).charAt(0));
-            if (first.equals(first.toLowerCase()) && second.equals(second.toUpperCase()))
-            {
-                Collections.swap(outputWords, 0, 1);
-            }
+            firstLastWord = firstLastWords.get(location);
+            //if (firstLastWord.length() > 0) {
+                if ((firstLastWord.charAt(firstLastWord.length() - 1) == '.') ||
+                        (firstLastWord.charAt(firstLastWord.length() - 1) == '?') ||
+                        (firstLastWord.charAt(firstLastWord.length() - 1) == '!')) {
+                    break;
+                }
+            //}else System.out.println("Word shorter than 1");
+
+            secondLastWord = secondLastWords.get(location);
+            //if (secondLastWord.length() > 0) {
+                if ((secondLastWord.charAt(secondLastWord.length() - 1) == '.') ||
+                        (secondLastWord.charAt(secondLastWord.length() - 1) == '?') ||
+                        (secondLastWord.charAt(secondLastWord.length() - 1) == '!')) {
+                    output = firstLastWord + " " + output;
+                    break;
+                }
+            //}else System.out.println("Word shorter than 1");
+
+            thirdLastWord = thirdLastWords.get(location);
+            //if (thirdLastWord.length() > 0) {
+                if ((thirdLastWord.charAt(thirdLastWord.length() - 1) == '.') ||
+                        (thirdLastWord.charAt(thirdLastWord.length() - 1) == '?') ||
+                        (thirdLastWord.charAt(thirdLastWord.length() - 1) == '!')) {
+                    output = secondLastWord + " " + firstLastWord + " " + output;
+                    break;
+                }
+            //}else System.out.println("Word shorter than 1");
+
+
+            fourthLastWord = fourthLastWords.get(location);
+            //if (fourthLastWord.length() > 0) {
+                if ((fourthLastWord.charAt(fourthLastWord.length() - 1) == '.') ||
+                        (fourthLastWord.charAt(fourthLastWord.length() - 1) == '?') ||
+                        (fourthLastWord.charAt(fourthLastWord.length() - 1) == '!')) {
+                    output = thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
+                    break;
+                }
+            //}else System.out.println("Word shorter than 1");
+
+            fifthLastWord = fifthLastWords.get(location);
+            //if (fifthLastWord.length() > 0) {
+                if ((fifthLastWord.charAt(fifthLastWord.length() - 1) == '.') ||
+                        (fifthLastWord.charAt(fifthLastWord.length() - 1) == '?') ||
+                        (fifthLastWord.charAt(fifthLastWord.length() - 1) == '!')) {
+                    output = fourthLastWord + " " + thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
+                    break;
+                }
+            //}
+            output = fifthLastWord + " " + fourthLastWord + " " + thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
+            keyword = fifthLastWord;
         }
-        output = "";
-        for (String outputWord : outputWords) {
-            output += outputWord + " ";
-        }
-        */
 
         return output;
     }
 
     private String generateForward(String keyword) throws WordNotFoundException
     {
-		String firstWord;
+        String firstWord;
         String secondWord;
         String thirdWord;
+        String fourthWord;
+        String fifthWord;
         String output = keyword + " ";
         while (keyword.charAt(keyword.length() - 1) != '.')
         {
-            firstWord = secondWord = thirdWord = "";
+            firstWord = secondWord = thirdWord = fourthWord = fifthWord = "";
             ArrayList<ArrayList<String>> wordsList = forwardMarkov.get(keyword);
             if ( wordsList == null )
             {
+                System.out.println(keyword);
                 WordNotFoundException exception = new WordNotFoundException("Word not found.");
                 throw exception;
             }
             ArrayList<String> firstWords = wordsList.get( 0 );
             ArrayList<String> secondWords = wordsList.get( 1 );
             ArrayList<String> thirdWords = wordsList.get( 2 );
+            ArrayList<String> fourthWords = wordsList.get( 3 );
+            ArrayList<String> fifthWords = wordsList.get( 4 );
             int location = rnd.nextInt(firstWords.size());
             firstWord = firstWords.get(location);
             if (firstWord.charAt(firstWord.length() - 1) == '.' )
@@ -291,8 +365,18 @@ public class Markov2 {
                 output += thirdWord + " ";
                 break;
             }
-            output += firstWord + " " + secondWord + " " + thirdWord + " ";
-            keyword = thirdWord;
+            fourthWord = fourthWords.get(location);
+            if (fourthWord.charAt(fourthWord.length() - 1) == '.') {
+                output += fourthWord + " ";
+                break;
+            }
+            fifthWord = fifthWords.get(location);
+            if (fifthWord.charAt(fifthWord.length() - 1) == '.') {
+                output += fifthWord + " ";
+                break;
+            }
+            output += firstWord + " " + secondWord + " " + thirdWord + " " + fourthWord + " " + fifthWord + " ";
+            keyword = fifthWord;
         }
         return output;
     }
@@ -309,8 +393,13 @@ public class Markov2 {
             String second = generateForward(keyword).trim();
             return first + " " + second;
         }
-        catch(Exception ex)
+        catch(WordNotFoundException ex)
         {
+            System.out.println("WORDNOTFOUNDEXCEPTION: " + keyword);
+            return null;
+        }
+        catch(Exception ex) {
+            System.out.println("EXCEPTION: " + keyword);
             return null;
         }
     }

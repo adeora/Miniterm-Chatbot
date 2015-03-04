@@ -59,7 +59,6 @@ public class Markov {
                             if (suffix == null) {
                                 if (wordList[i + 1] != "\n") {
                                     suffix = new ArrayList<String>();
-
                                     suffix.add(wordList[i + 1]);
                                     markovChain.put(wordList[i], suffix);
                                 }
@@ -153,7 +152,8 @@ public class Markov {
     public static void main(String args[])
     {
         Markov m = new Markov();
-        m.generate(new File("prince.txt"));
+        Hashtable values = m.generate(new File("prince.txt"));
+        //System.out.println(values);
         m.generateSentence();
     }
 }
