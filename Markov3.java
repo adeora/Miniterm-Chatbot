@@ -330,7 +330,7 @@ public class Markov3 {
             ArrayList<ArrayList<String>> wordsList = forwardMarkov.get(keyword);
             if ( wordsList == null )
             {
-                System.out.println(keyword);
+                //System.out.println(keyword);
                 WordNotFoundException exception = new WordNotFoundException("Word not found.");
                 throw exception;
             }
@@ -401,11 +401,11 @@ public class Markov3 {
         }
         catch(WordNotFoundException ex)
         {
-            System.out.println("WORDNOTFOUNDEXCEPTION: " + keyword);
+            //System.out.println("WORDNOTFOUNDEXCEPTION: " + keyword);
             return null;
         }
         catch(Exception ex) {
-            System.out.println("EXCEPTION: " + keyword);
+            //System.out.println("EXCEPTION: " + keyword);
             return null;
         }
     }
