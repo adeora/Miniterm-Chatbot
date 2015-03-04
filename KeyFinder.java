@@ -68,7 +68,7 @@ public class KeyFinder {
 	}
 	
 	public ArrayList<String> findKeys2( String sentence ) {
-		System.out.println( "Finding keys to sentence: [" + sentence + "]" );
+		//System.out.println( "Finding keys to sentence: [" + sentence + "]" );
 		String[] words = sentence.split(" ");
 		
 		//find the subject, main verb and the object if any
@@ -151,15 +151,17 @@ public class KeyFinder {
 	}
 	
 	public ArrayList<String> findKeys( String sentence ) {
-		System.out.println( "Finding keys to sentence: [" + sentence + "]" );
+		//System.out.println( "Finding keys to sentence: [" + sentence + "]" );
 		String[] words = sentence.split(" ");
 		ArrayList<String> nounList = new ArrayList<String>();
 		for( int i = 0; i < words.length; i++ ) {
-			String wordCopy = words[i].toLowerCase();
+			String wordCopy = words[i];
 			wordCopy = wordCopy.replaceAll( "[^A-Za-z]", "" );
 			for( String noun: nouns ) {
 				if( wordCopy.equals(noun) ) {
-					nounList.add( words[i].replaceAll("[^A-Za-z]", "") );
+					String word = words[i].replaceAll("[^A-Za-z']", "").toLowerCase();
+					nounList.add( word );
+					nounList.add(Character.toUpperCase(word.charAt(0)) + word.substring(1));
 				}
 			}
 		}
