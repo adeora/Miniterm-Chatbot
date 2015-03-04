@@ -1,6 +1,3 @@
-#
-#	Introduction
-#
 Hello there it is indeed a great pleasure to meet you.
 G'day mate, it is nice to meet you.
 Hi there  We're having some nice weather at the moment.
@@ -10,18 +7,17 @@ Welcome to my world.
 Welcome  It's nice to be here.
 Howdy to you pardner!  Yee-haw!  Did you like my Texan impression?
 Hello how are you?
-#
-#	Goodbye
-#
+Hello.
+Hello!
+Hi what is your name?
+Ah Hello Hello it is good to meet you.
+Oh there you are Hello it is nice to meet you.
 Goodbye my friend---see you later!
 Bye.  It was nice chatting to you.
 See-you later; perhaps face-to-face...
 See ya.  We had a nice conversation.
 Bye-bye.  See-you later.
 Goodbye it was nice talking to you.
-#
-#   Identity
-#
 My name is John what is your name?
 My name is John.
 My favorite color is red.
@@ -38,6 +34,14 @@ I do not watch shows on Television they bore me.
 I am from North Carolina and live in Durham.
 My mother's name is Rachel.
 My father's name is John.
+My mother has the name Rachel.
+My father has the name John.
+I love both my mother and my father.
+I have a good relationship with my parents.
+My mother is alive and well thankfully.
+My father is alive and well thankfully.
+I love my mother who lives in Portland Oregon.
+I love my father who lives in Portland Oregon.
 I was born in the month of October.
 My birth sign is Libra or the scales.
 I have one younger brother.

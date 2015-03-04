@@ -270,54 +270,44 @@ public class Markov3 {
             int location = rnd.nextInt(firstLastWords.size());
 
             firstLastWord = firstLastWords.get(location);
-            //if (firstLastWord.length() > 0) {
-                if ((firstLastWord.charAt(firstLastWord.length() - 1) == '.') ||
-                        (firstLastWord.charAt(firstLastWord.length() - 1) == '?') ||
-                        (firstLastWord.charAt(firstLastWord.length() - 1) == '!')) {
-                    break;
-                }
-            //}else System.out.println("Word shorter than 1");
+            if ((firstLastWord.charAt(firstLastWord.length() - 1) == '.') ||
+                    (firstLastWord.charAt(firstLastWord.length() - 1) == '?') ||
+                    (firstLastWord.charAt(firstLastWord.length() - 1) == '!')) {
+                break;
+            }
 
             secondLastWord = secondLastWords.get(location);
-            //if (secondLastWord.length() > 0) {
-                if ((secondLastWord.charAt(secondLastWord.length() - 1) == '.') ||
-                        (secondLastWord.charAt(secondLastWord.length() - 1) == '?') ||
-                        (secondLastWord.charAt(secondLastWord.length() - 1) == '!')) {
-                    output = firstLastWord + " " + output;
-                    break;
-                }
-            //}else System.out.println("Word shorter than 1");
+            if ((secondLastWord.charAt(secondLastWord.length() - 1) == '.') ||
+                    (secondLastWord.charAt(secondLastWord.length() - 1) == '?') ||
+                    (secondLastWord.charAt(secondLastWord.length() - 1) == '!')) {
+                output = firstLastWord + " " + output;
+                break;
+            }
 
             thirdLastWord = thirdLastWords.get(location);
-            //if (thirdLastWord.length() > 0) {
-                if ((thirdLastWord.charAt(thirdLastWord.length() - 1) == '.') ||
-                        (thirdLastWord.charAt(thirdLastWord.length() - 1) == '?') ||
-                        (thirdLastWord.charAt(thirdLastWord.length() - 1) == '!')) {
-                    output = secondLastWord + " " + firstLastWord + " " + output;
-                    break;
-                }
-            //}else System.out.println("Word shorter than 1");
+            if ((thirdLastWord.charAt(thirdLastWord.length() - 1) == '.') ||
+                    (thirdLastWord.charAt(thirdLastWord.length() - 1) == '?') ||
+                    (thirdLastWord.charAt(thirdLastWord.length() - 1) == '!')) {
+                output = secondLastWord + " " + firstLastWord + " " + output;
+                break;
+            }
 
 
             fourthLastWord = fourthLastWords.get(location);
-            //if (fourthLastWord.length() > 0) {
-                if ((fourthLastWord.charAt(fourthLastWord.length() - 1) == '.') ||
-                        (fourthLastWord.charAt(fourthLastWord.length() - 1) == '?') ||
-                        (fourthLastWord.charAt(fourthLastWord.length() - 1) == '!')) {
-                    output = thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
-                    break;
-                }
-            //}else System.out.println("Word shorter than 1");
+            if ((fourthLastWord.charAt(fourthLastWord.length() - 1) == '.') ||
+                    (fourthLastWord.charAt(fourthLastWord.length() - 1) == '?') ||
+                    (fourthLastWord.charAt(fourthLastWord.length() - 1) == '!')) {
+                output = thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
+                break;
+            }
 
             fifthLastWord = fifthLastWords.get(location);
-            //if (fifthLastWord.length() > 0) {
-                if ((fifthLastWord.charAt(fifthLastWord.length() - 1) == '.') ||
-                        (fifthLastWord.charAt(fifthLastWord.length() - 1) == '?') ||
-                        (fifthLastWord.charAt(fifthLastWord.length() - 1) == '!')) {
-                    output = fourthLastWord + " " + thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
-                    break;
-                }
-            //}
+            if ((fifthLastWord.charAt(fifthLastWord.length() - 1) == '.') ||
+                    (fifthLastWord.charAt(fifthLastWord.length() - 1) == '?') ||
+                    (fifthLastWord.charAt(fifthLastWord.length() - 1) == '!')) {
+                output = fourthLastWord + " " + thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
+                break;
+            }
             output = fifthLastWord + " " + fourthLastWord + " " + thirdLastWord + " " + secondLastWord + " " + firstLastWord + " " + output;
             keyword = fifthLastWord;
         }
@@ -333,7 +323,8 @@ public class Markov3 {
         String fourthWord;
         String fifthWord;
         String output = keyword + " ";
-        while (keyword.charAt(keyword.length() - 1) != '.')
+        while ((keyword.charAt(keyword.length() - 1) != '.') || (keyword.charAt(keyword.length() - 1) != '?')
+                || (keyword.charAt(keyword.length() - 1) != '!'))
         {
             firstWord = secondWord = thirdWord = fourthWord = fifthWord = "";
             ArrayList<ArrayList<String>> wordsList = forwardMarkov.get(keyword);
@@ -350,29 +341,44 @@ public class Markov3 {
             ArrayList<String> fifthWords = wordsList.get( 4 );
             int location = rnd.nextInt(firstWords.size());
             firstWord = firstWords.get(location);
-            if (firstWord.charAt(firstWord.length() - 1) == '.' )
+            if ((firstWord.charAt(firstWord.length() - 1) == '.') ||
+                    (firstWord.charAt(firstWord.length() - 1) == '?') ||
+                    (firstWord.charAt(firstWord.length() - 1) == '!'))
             {
                 output += firstWord + " ";
+                //output += firstWord + " ";
                 break;
             }
             secondWord = secondWords.get(location);
-            if (secondWord.charAt(secondWord.length() - 1) == '.') {
-                output += secondWord + " ";
+            if ((secondWord.charAt(secondWord.length() - 1) == '.') ||
+                    (secondWord.charAt(secondWord.length() - 1) == '?') ||
+                    (secondWord.charAt(secondWord.length() - 1) == '!')) {
+                output += firstWord + " " + secondWord + " ";
+                //output += secondWord + " ";
                 break;
             }
             thirdWord = thirdWords.get(location);
-            if (thirdWord.charAt(thirdWord.length() - 1) == '.') {
-                output += thirdWord + " ";
+            if ((thirdWord.charAt(thirdWord.length() - 1) == '.') ||
+                    (thirdWord.charAt(thirdWord.length() - 1) == '?') ||
+                    (thirdWord.charAt(thirdWord.length() - 1) == '!')) {
+                output += firstWord + " " + secondWord + " " + thirdWord + " ";
+                //output += thirdWord + " ";
                 break;
             }
             fourthWord = fourthWords.get(location);
-            if (fourthWord.charAt(fourthWord.length() - 1) == '.') {
-                output += fourthWord + " ";
+            if ((fourthWord.charAt(fourthWord.length() - 1) == '.') ||
+                    (fourthWord.charAt(fourthWord.length() - 1) == '?') ||
+                    (fourthWord.charAt(fourthWord.length() - 1) == '!')) {
+                output += firstWord + " " + secondWord + " " + thirdWord + " " + fourthWord + " ";
+                //output += fourthWord + " ";
                 break;
             }
             fifthWord = fifthWords.get(location);
-            if (fifthWord.charAt(fifthWord.length() - 1) == '.') {
-                output += fifthWord + " ";
+            if ((fifthWord.charAt(fifthWord.length() - 1) == '.') ||
+                    (fifthWord.charAt(fifthWord.length() - 1) == '?') ||
+                    (fifthWord.charAt(fifthWord.length() - 1) == '!')) {
+                output += firstWord + " " + secondWord + " " + thirdWord + " " + fourthWord + " " + fifthWord + " ";
+                //output += fifthWord + " ";
                 break;
             }
             output += firstWord + " " + secondWord + " " + thirdWord + " " + fourthWord + " " + fifthWord + " ";

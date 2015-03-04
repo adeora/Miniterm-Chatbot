@@ -13,7 +13,7 @@ public class MarkovTester {
         m.train(new File("corpora/conversation-data-single-line.txt"));
 
         ArrayList<String> wordList = new ArrayList<String>();
-        wordList.add("Hello");
+        wordList.add("watch");
 
         for (String s : wordList) {
             System.out.println(m.generateSentence(s));
