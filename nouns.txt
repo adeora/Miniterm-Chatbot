@@ -1,3 +1,17 @@
+I
+i
+I'm
+i'm
+my
+My
+he
+He
+Him
+him
+his
+His
+Her
+her
 A-bomb
 A-bombs
 A-frame
@@ -44273,7 +44287,6 @@ hoverports
 hovers
 hovertrain
 hovertrains
-how
 how-d'ye-do
 how-d'ye-dos
 how-do-you-do
@@ -89432,9 +89445,7 @@ whelk
 whelks
 whelp
 whelps
-when
 whens
-where
 whereabouts
 wherefore
 wheres
@@ -89617,7 +89628,6 @@ whizbang
 whizbangs
 whizz
 whizzes
-who
 who'd
 who'll
 who's
@@ -89660,7 +89670,6 @@ whorls
 whort
 whortleberries
 whortleberry
-why
 whydah
 whys
 wick
