@@ -23,6 +23,7 @@ public class ElizaImp3 {
     public static HashMap<String, String> changeList;
 	public static Markov3 m3;
 	public static File file;
+	public static int addCount;
 
     public static final String[] EXITSTR = {"goodbye", "bye", "adios"};
     
@@ -32,6 +33,7 @@ public class ElizaImp3 {
         isDone = false;
         changeList = initChangeList();
 		m3 = new Markov3();
+		addCount = 0;
 		file = new File("conversation-data-single-line.txt");
 		m3.train(file);
         System.out.println("Hello. What can I do for you today?");
@@ -50,16 +52,41 @@ public class ElizaImp3 {
             if( isDone ) {
                 break;
             }
+			
+			//new update: add the comment to the file for the Markov Model
+			addToFile( raw );
+			addCount++;
+			if( addCount > 20 ) {
+				//retrain the Markov Model for the newly added material
+				m3.train(file);
+				addCount = 0;
+			}
+			
             //otherwise, begin processing
             //first preprocess the string for words that need to be changed via changeList
             raw = preprocess( raw ); 
-            System.out.println( "Preprocess: " + raw );
-
+			
+            //System.out.println( "Preprocess: " + raw );
             //then process the response
             String response = response( raw );
             System.out.println( response );
         }
     }
+	
+	public static void addToFile( String raw ) {
+		try {
+    		PrintWriter out = new PrintWriter( new BufferedWriter( new FileWriter("conversation-data-single-line.txt", true)));
+			if( raw.lastIndexOf(".") != raw.length() - 1 || raw.lastIndexOf(".") != raw.length() - 1 || raw.lastIndexOf(".") != raw.length() - 1 ) {
+				out.print(raw + ". ");
+			}
+			else {
+    			out.print(raw + " ");
+			}
+    		out.close();
+		} catch( IOException ex ) {
+    		//exception handling left as an exercise for the reader
+		}
+	}
 
     public static String preprocess( String test ) {
         //obtain a list of words
@@ -137,7 +164,7 @@ public class ElizaImp3 {
 		//first, identify the keywords needed to input into the Markov model
 		KeyFinder kf = new KeyFinder();
 		ArrayList<String> keys = kf.findKeys(input);
-		System.out.println( "KEYS: " + keys );
+		//System.out.println( "KEYS: " + keys );
 		String[][] responses = new String[keys.size()][10];
 		for( int j = 0; j < keys.size(); j++ ) {
 			for( int i = 0; i < 10; i++ ) {
