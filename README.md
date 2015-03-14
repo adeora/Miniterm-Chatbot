@@ -22,11 +22,10 @@ When a user's input is receieved, the following steps are taken to generate a re
 ## Included Files
 
 * `ElizaImp3.java` - the core of the chatbot: processes user input, gets response from  Markov3.java, gets keywords from KeyFinder.java
-* * `Markov3.java` - the Markov modeling engine: trains itself on given source data, generates responses based on given keywords, selects most appropriate response
-* * `KeyFinder.java` - keyword identifier: identifies keys based on a given set of verbs and nouns
-* * `SlangBanger.java` - slang identifier: an in-progress tool to generate associations between words and phrases in order to identify slang terms
-* * `conversation-data.txt` - training data: a formatted list of possible responses - not used by the chatterbot
-* * `conversation-data-single-line.txt` - training data: `conversation-data.txt` formatted onto a single line (`\n` characters replaced with spaces) - used by the chatterbot to train itself
-* * `nouns.txt` - noun list: a list of nouns used by `KeyFinder.java` to identify keywords
-* * `verbs.txt` - verb list: a list of verbs used by `KeyFinder.java` to identify keywords 
-*
+* `Markov3.java` - the Markov modeling engine: trains itself on given source data, generates responses based on given keywords, selects most appropriate response
+* `KeyFinder.java` - keyword identifier: identifies keys based on a given set of verbs and nouns
+* `SlangBanger.java` - slang identifier: an in-progress tool to generate associations between words and phrases in order to identify slang terms
+* `conversation-data.txt` - training data: a formatted list of possible responses - not used by the chatterbot
+* `conversation-data-single-line.txt` - training data: `conversation-data.txt` formatted onto a single line (`\n` characters replaced with spaces) - used by the chatterbot to train itself
+* `nouns.txt` - noun list: a list of nouns used by `KeyFinder.java` to identify keywords
+* `verbs.txt` - verb list: a list of verbs used by `KeyFinder.java` to identify keywords 
