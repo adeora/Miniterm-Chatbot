@@ -32,16 +32,13 @@ public class ElizaImp3 {
         input = new Scanner( System.in );
         isDone = false;
         changeList = initChangeList();
-<<<<<<< HEAD
 		    m3 = new Markov3();
 		    file = new File("src/conversation-data-single-line.txt");
 		    m3.train(file);
-=======
 		m3 = new Markov3();
 		addCount = 0;
 		file = new File("conversation-data-single-line.txt");
 		m3.train(file);
->>>>>>> 70a8b1b794aaae93587556754cda076623d0dd9e
         System.out.println("Hello. What can I do for you today?");
 
         //MAIN LOOP
@@ -71,13 +68,10 @@ public class ElizaImp3 {
             //otherwise, begin processing
             //first preprocess the string for words that need to be changed via changeList
             raw = preprocess( raw ); 
-<<<<<<< HEAD
             //System.out.println( "Preprocess: " + raw );
 
-=======
 			
             //System.out.println( "Preprocess: " + raw );
->>>>>>> 70a8b1b794aaae93587556754cda076623d0dd9e
             //then process the response
             String response = response( raw );
             System.out.println( response );
@@ -172,7 +166,6 @@ public class ElizaImp3 {
 
     public static String response( String input ) {
         //use the Markov model to process the input to provide the best response
-<<<<<<< HEAD
 		    //first, identify the keywords needed to input into the Markov model
 		    KeyFinder kf = new KeyFinder();
 		    ArrayList<String> keys = kf.findKeys(input);
@@ -190,7 +183,6 @@ public class ElizaImp3 {
 			    }
 		    }
 		    //test the array for the sentences.
-=======
 		//first, identify the keywords needed to input into the Markov model
 		KeyFinder kf = new KeyFinder();
 		ArrayList<String> keys = kf.findKeys(input);
@@ -213,8 +205,6 @@ public class ElizaImp3 {
 				System.out.println(responses[j][i]);
 			}
 		}*/
->>>>>>> 70a8b1b794aaae93587556754cda076623d0dd9e
-		
 		    //test the sentences for keys, the one with the most keys will be the chosen sentence
 		    int maxKeyMatches = 0;
 		    String bestSentence = "";
