@@ -51,7 +51,6 @@ public class SlangBanger {
         else if( assoc.containsValue(str) ) {
             //the string is slang or misspelling
             System.out.println( "I know this misspelling/slang: " + str );
-            //TODO: find the key associated with this particular value
         }
         else {
             //the string does not exist in assoc

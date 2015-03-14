@@ -17,18 +17,10 @@ public class KeyFinder {
 	private ArrayList<String> preps;
 	
 	public KeyFinder() {
-		nounFile = new File( "partsOfSpeechFiles/nouns.txt" );
-		verbFile = new File( "partsOfSpeechFiles/verbs.txt" );
-		conjFile = new File( "partsOfSpeechFiles/conjunctions.txt");
-		prepFile = new File( "partsOfSpeechFiles/prepositions.txt");
-		advFile = new File( "partsOfSpeechFiles/adverbs.txt");
-		adjFile = new File( "partsOfSpeechFiles/adjectives.txt");
+		nounFile = new File( "src/nouns.txt" );
+		verbFile = new File( "src/verbs.txt" );
 		nouns = new ArrayList<String>();
 		verbs = new ArrayList<String>();
-		conjs = new ArrayList<String>();
-		advs = new ArrayList<String>();
-		adjs = new ArrayList<String>();
-		preps = new ArrayList<String>();
 		uploadText();
 	}
 	
@@ -43,22 +35,6 @@ public class KeyFinder {
 			br = new BufferedReader( new FileReader( verbFile ) );
 			while( (thisLine = br.readLine()) != null ) {
 				verbs.add( thisLine );
-			}
-			br = new BufferedReader( new FileReader( conjFile ) );
-			while( (thisLine = br.readLine()) != null ) {
-				conjs.add( thisLine );
-			}
-			br = new BufferedReader( new FileReader( advFile ) );
-			while( (thisLine = br.readLine()) != null ) {
-				advs.add( thisLine );
-			}
-			br = new BufferedReader( new FileReader( adjFile ) );
-			while( (thisLine = br.readLine()) != null ) {
-				adjs.add( thisLine );
-			}
-			br = new BufferedReader( new FileReader( prepFile ) );
-			while( (thisLine = br.readLine()) != null ) {
-				preps.add( thisLine );
 			}
 			br.close();
 		}

@@ -31,9 +31,9 @@ public class ElizaImp3 {
         input = new Scanner( System.in );
         isDone = false;
         changeList = initChangeList();
-		m3 = new Markov3();
-		file = new File("conversation-data-single-line.txt");
-		m3.train(file);
+		    m3 = new Markov3();
+		    file = new File("src/conversation-data-single-line.txt");
+		    m3.train(file);
         System.out.println("Hello. What can I do for you today?");
 
         //MAIN LOOP
@@ -53,7 +53,7 @@ public class ElizaImp3 {
             //otherwise, begin processing
             //first preprocess the string for words that need to be changed via changeList
             raw = preprocess( raw ); 
-            System.out.println( "Preprocess: " + raw );
+            //System.out.println( "Preprocess: " + raw );
 
             //then process the response
             String response = response( raw );
@@ -65,12 +65,12 @@ public class ElizaImp3 {
         //obtain a list of words
         String[] words = test.toLowerCase().split(" ");
 		
-		//find and remove punctuation
-		for( int i = 0; i < words.length; i++ ) {
-			if( words[i].lastIndexOf("?") == words[i].length() - 1 || words[i].lastIndexOf("!") == words[i].length() - 1 || words[i].lastIndexOf(".") == words[i].length() - 1  ) {
-				words[i] = words[i].substring(0, words[i].length() - 1);
-			}
-		}
+		    //find and remove punctuation
+		    for( int i = 0; i < words.length; i++ ) {
+			    if( words[i].lastIndexOf("?") == words[i].length() - 1 || words[i].lastIndexOf("!") == words[i].length() - 1 || words[i].lastIndexOf(".") == words[i].length() - 1  ) {
+				    words[i] = words[i].substring(0, words[i].length() - 1);
+			    }
+		    }
 
         //loop through to find if the word matches with changeList
         for( int i = 0; i < words.length; i++ ) {
@@ -82,9 +82,9 @@ public class ElizaImp3 {
         //reform the list into the appropriate string
         String ret = "";
         for( int i = 0; i < words.length; i++ ) {
-			if( words[i].equals("the") || words[i].equals("a") || words[i].equals("an") ) {
-				continue;
-			}
+			      if( words[i].equals("the") || words[i].equals("a") || words[i].equals("an") ) {
+				        continue;
+			      }
             ret += (words[i] + " ");
         }
         ret = ret.trim();
@@ -97,83 +97,78 @@ public class ElizaImp3 {
         //decline all forms of "you", and associate that with the corresponding forms of "I"
         list.put( "you", "i" );
         list.put( "your", "my" );
-		list.put( "you'd", "i'd" );
-		list.put( "you'll", "i'll" );
-		list.put( "you're", "i'm" );
-		list.put( "you've", "i've" );
-		list.put( "yourself", "myself" );
-		list.put( "yours", "mine" );
+		    list.put( "you'd", "i'd" );
+		    list.put( "you'll", "i'll" );
+		    list.put( "you're", "i'm" );
+		    list.put( "you've", "i've" );
+		    list.put( "yourself", "myself" );
+		    list.put( "yours", "mine" );
 
         //and vice versa: "I" to "you"
         list.put( "i", "you" );
         list.put( "me", "you" );
         list.put( "my", "your" );
-		list.put( "mine", "yours" );
-		list.put( "myself", "yourself" );
-		list.put( "i'd", "you'd" );
-		list.put( "i'll", "you'll" );
-		list.put( "i've", "you've" );
-		list.put( "i'm", "you're" );
+		    list.put( "mine", "yours" );
+		    list.put( "myself", "yourself" );
+		    list.put( "i'd", "you'd" );
+		    list.put( "i'll", "you'll" );
+		    list.put( "i've", "you've" );
+		    list.put( "i'm", "you're" );
         
         //associate "why" with "because"
         list.put( "why", "because" );
-		list.put( "because", "why" );
+		    list.put( "because", "why" );
 		
-		//associate no with yes
-		list.put( "no", "yes" );
-		list.put( "yes", "no" );
+		    //associate no with yes
+		    list.put( "no", "yes" );
+		    list.put( "yes", "no" );
 		
-		//others
-		list.put( "like", "dislike" );
-		list.put( "dislike", "like" );
-		list.put( "love", "hate" );
-		list.put( "hate", "love" );
+		    //others
+		    list.put( "like", "dislike" );
+		    list.put( "dislike", "like" );
+		    list.put( "love", "hate" );
+		    list.put( "hate", "love" );
 		
         return list;
     }
 
     public static String response( String input ) {
         //use the Markov model to process the input to provide the best response
-		//first, identify the keywords needed to input into the Markov model
-		KeyFinder kf = new KeyFinder();
-		ArrayList<String> keys = kf.findKeys(input);
-		System.out.println( "KEYS: " + keys );
-		String[][] responses = new String[keys.size()][10];
-		for( int j = 0; j < keys.size(); j++ ) {
-			for( int i = 0; i < 10; i++ ) {
-				String newSentence = m3.generateSentence(keys.get(j));
-				if( newSentence != null ) {
-					responses[j][i] = newSentence;
-				}
-				else {
-					responses[j][i] = "";
-				}
-			}
-		}
-		//test the array for the sentences.
-		/*for( int j = 0; j < keys.size(); j++ ) {
-			for( int i = 0; i < 10; i++ ) {
-				System.out.println(responses[j][i]);
-			}
-		}*/
+		    //first, identify the keywords needed to input into the Markov model
+		    KeyFinder kf = new KeyFinder();
+		    ArrayList<String> keys = kf.findKeys(input);
+		    //System.out.println( "KEYS: " + keys );
+		    String[][] responses = new String[keys.size()][10];
+		    for( int j = 0; j < keys.size(); j++ ) {
+			    for( int i = 0; i < 10; i++ ) {
+				    String newSentence = m3.generateSentence(keys.get(j));
+				    if( newSentence != null ) {
+					    responses[j][i] = newSentence;
+				    }
+				    else {
+					    responses[j][i] = "";
+				    }
+			    }
+		    }
+		    //test the array for the sentences.
 		
-		//test the sentences for keys, the one with the most keys will be the chosen sentence
-		int maxKeyMatches = 0;
-		String bestSentence = "";
-		for( int j = 0; j < keys.size(); j++ ) {
-			for( int i = 0; i < 10; i++ ) {
-				int tempKeyMatches = 0;
-				for( String key: keys ) {
-					if( responses[j][i].contains(key) ) {
-						tempKeyMatches++;
-					}
-				}
-				if( tempKeyMatches > maxKeyMatches ) {
-					maxKeyMatches = tempKeyMatches;
-					bestSentence = responses[j][i];
-				}
-			}
-		}
-		return bestSentence.equals("") ? "..." : bestSentence;
+		    //test the sentences for keys, the one with the most keys will be the chosen sentence
+		    int maxKeyMatches = 0;
+		    String bestSentence = "";
+		    for( int j = 0; j < keys.size(); j++ ) {
+			    for( int i = 0; i < 10; i++ ) {
+				    int tempKeyMatches = 0;
+				    for( String key: keys ) {
+					    if( responses[j][i].contains(key) ) {
+						    tempKeyMatches++;
+					    }
+				    }
+				    if( tempKeyMatches > maxKeyMatches ) {
+					    maxKeyMatches = tempKeyMatches;
+					    bestSentence = responses[j][i];
+				    }
+			    }
+		    }
+		    return bestSentence.equals("") ? "..." : bestSentence;
     }
 }
